@@ -239,10 +239,10 @@ function renderPage(rootFolder, buildTime) {
 </head>
 <body>
 <header class="topbar">
-  <button class="icon-button menu-button" type="button" aria-label="分类" aria-expanded="false">☰</button>
+  <button class="icon-button menu-button" type="button" aria-label="分类" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
   <h1>${escapeHtml(SITE_TITLE)}</h1>
   <input class="search" type="search" placeholder="搜索名称、ID 或网址  ( / )" aria-label="搜索" autocomplete="off">
-  <button class="icon-button theme-button" type="button" aria-label="切换主题">◐</button>
+  <button class="icon-button theme-button" type="button" aria-label="切换主题"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg></button>
 </header>
 <div class="layout">
   <nav class="sidebar" aria-label="分类">
@@ -271,7 +271,8 @@ body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,-ap
 .topbar h1{margin:0;font-size:16px;white-space:nowrap}
 .search{flex:1;max-width:480px;margin-left:auto;height:36px;padding:0 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
 .search:focus{outline:2px solid var(--accent);outline-offset:-1px}
-.icon-button{width:36px;height:36px;border:1px solid var(--border);border-radius:8px;background:none;color:var(--text);font-size:16px;cursor:pointer}
+.icon-button{display:grid;flex:none;place-items:center;width:36px;height:36px;padding:0;border:1px solid var(--border);border-radius:8px;background:none;color:var(--text);cursor:pointer}
+.icon-button svg{width:20px;height:20px}
 .icon-button:hover{background:var(--hover)}
 .menu-button{display:none}
 .layout{display:flex;align-items:flex-start}
@@ -304,7 +305,7 @@ h2 .count{margin-left:4px}
 .topbar{gap:8px;padding:0 10px}
 .topbar h1{display:none}
 .search{margin-left:0;max-width:none}
-.menu-button{display:block}
+.menu-button{display:grid}
 .sidebar{position:fixed;left:0;z-index:20;box-shadow:4px 0 16px rgb(0 0 0/.15);transform:translateX(-100%);transition:transform .2s}
 .sidebar.open{transform:none}
 main{padding:12px}
