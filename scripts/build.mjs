@@ -241,7 +241,10 @@ function renderPage(rootFolder, buildTime) {
 <header class="topbar">
   <button class="icon-button menu-button" type="button" aria-label="分类" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
   <h1>${escapeHtml(SITE_TITLE)}</h1>
-  <input class="search" type="search" placeholder="搜索名称、ID 或网址  ( / )" aria-label="搜索" autocomplete="off">
+  <div class="search-box">
+    <input class="search" type="search" placeholder="搜索名称、ID 或网址  ( / )" aria-label="搜索" autocomplete="off">
+    <button class="clear-button" type="button" aria-label="清空搜索" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+  </div>
   <button class="icon-button theme-button" type="button" aria-label="切换主题"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg></button>
 </header>
 <div class="layout">
@@ -270,8 +273,14 @@ const PAGE_STYLES = `
 body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
 .topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;height:56px;padding:0 16px;background:var(--panel);border-bottom:1px solid var(--border)}
 .topbar h1{margin:0;font-size:16px;white-space:nowrap}
-.search{flex:1;max-width:480px;margin-left:auto;height:36px;padding:0 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
+.search-box{position:relative;flex:1;max-width:480px;margin-left:auto}
+.search{width:100%;height:36px;padding:0 36px 0 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
 .search:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.search::-webkit-search-cancel-button{display:none}
+.clear-button{position:absolute;top:4px;right:4px;display:grid;place-items:center;width:28px;height:28px;padding:0;border:0;border-radius:6px;background:none;color:var(--muted);cursor:pointer}
+.clear-button[hidden]{display:none}
+.clear-button:hover{background:var(--hover);color:var(--text)}
+.clear-button svg{width:16px;height:16px}
 .icon-button{display:grid;flex:none;place-items:center;width:36px;height:36px;padding:0;border:1px solid var(--border);border-radius:8px;background:none;color:var(--text);cursor:pointer}
 .icon-button svg{width:20px;height:20px}
 .icon-button:hover{background:var(--hover)}
@@ -306,7 +315,7 @@ h2 .count{margin-left:4px}
 @media (max-width:760px){
 .topbar{gap:8px;padding:0 10px}
 .topbar h1{display:none}
-.search{margin-left:0;max-width:none}
+.search-box{margin-left:0;max-width:none}
 .menu-button{display:grid}
 .sidebar{position:fixed;left:0;z-index:20;box-shadow:4px 0 16px rgb(0 0 0/.15);transform:translateX(-100%);transition:transform .2s}
 .sidebar.open{transform:none}
@@ -319,6 +328,7 @@ main{padding:12px}
 const PAGE_SCRIPT = `
 (() => {
   const searchInput = document.querySelector(".search");
+  const clearButton = document.querySelector(".clear-button");
   const sidebar = document.querySelector(".sidebar");
   const menuButton = document.querySelector(".menu-button");
   const statusText = document.querySelector(".status");
@@ -337,6 +347,7 @@ const PAGE_SCRIPT = `
 
   function applyFilters() {
     const folderId = selectedFolderId();
+    clearButton.hidden = searchInput.value === "";
     const terms = searchInput.value.trim().toLowerCase().split(/\\s+/).filter(Boolean);
     let visibleCount = 0;
     for (const section of sections) {
@@ -361,6 +372,10 @@ const PAGE_SCRIPT = `
   }
 
   searchInput.addEventListener("input", applyFilters);
+  clearButton.addEventListener("click", () => {
+    searchInput.value = "";
+    applyFilters();
+  });
   window.addEventListener("hashchange", () => {
     applyFilters();
     setSidebarOpen(false);
