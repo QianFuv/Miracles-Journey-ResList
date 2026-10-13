@@ -1,0 +1,10 @@
+{
+  "name": "miracles-journey-reslist",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
