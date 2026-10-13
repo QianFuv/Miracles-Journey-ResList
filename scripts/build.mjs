@@ -250,6 +250,7 @@ function renderPage(rootFolder, buildTime) {
     ${renderNavigation(rootFolder.children)}
     <p class="build-info">构建于 ${escapeHtml(buildTime)}</p>
   </nav>
+  <div class="backdrop"></div>
   <main>
     <p class="status" aria-live="polite"></p>
     ${renderSections(rootFolder, [])}
@@ -300,6 +301,7 @@ h2 .count{margin-left:4px}
 .meta{display:flex;align-items:center;gap:8px;min-width:0;color:var(--muted);font-size:12px}
 .meta code{overflow:hidden;font:12px ui-monospace,SFMono-Regular,Consolas,monospace;text-overflow:ellipsis;white-space:nowrap}
 .source{flex:none;margin-left:auto;padding:0 6px;border-radius:4px;background:var(--hover)}
+.backdrop{display:none}
 .empty{padding:48px 0;color:var(--muted);text-align:center}
 @media (max-width:760px){
 .topbar{gap:8px;padding:0 10px}
@@ -308,6 +310,7 @@ h2 .count{margin-left:4px}
 .menu-button{display:grid}
 .sidebar{position:fixed;left:0;z-index:20;box-shadow:4px 0 16px rgb(0 0 0/.15);transform:translateX(-100%);transition:transform .2s}
 .sidebar.open{transform:none}
+.sidebar.open+.backdrop{display:block;position:fixed;inset:56px 0 0;z-index:15;background:rgb(0 0 0/.4)}
 main{padding:12px}
 .cards{grid-template-columns:minmax(0,1fr)}
 }
@@ -364,6 +367,7 @@ const PAGE_SCRIPT = `
     window.scrollTo(0, 0);
   });
   menuButton.addEventListener("click", () => setSidebarOpen(!sidebar.classList.contains("open")));
+  document.querySelector(".backdrop").addEventListener("click", () => setSidebarOpen(false));
   document.querySelector(".theme-button").addEventListener("click", () => {
     const theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
     document.documentElement.dataset.theme = theme;
